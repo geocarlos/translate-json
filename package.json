@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-electron": "electron ./public/electron.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -31,5 +32,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^8.0.2"
   }
 }
