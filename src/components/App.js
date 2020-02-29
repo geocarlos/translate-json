@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import Languages from './Languages';
 
 const useStyles = makeStyles({
   root: {
@@ -12,6 +13,7 @@ const App = () => {
   return (
     <div className={classes.root}>
       <h1>TranslateJSON</h1>
+      <Languages/>
     </div>
   );
 }
