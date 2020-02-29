@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
@@ -11,4 +11,8 @@ app.on('ready', () => {
 
     mainWindow.loadURL('http://localhost:3000');
     // mainWindow.loadURL(`file://${__dirname}/build/index.html`);
-})
+});
+
+ipcMain.on('languages:add', (event, data) => {
+    console.log(data);
+});

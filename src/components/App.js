@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Languages from './Languages';
+import * as actions from '../actions';
 
 const useStyles = makeStyles({
   root: {
