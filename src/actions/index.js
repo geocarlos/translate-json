@@ -1,10 +1,12 @@
-import { ipcRenderer } from 'electron';
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 export const ADD_LANGUAGE = 'ADD_LANGUAGE';
 
-const addLanguage = language => dispatch => {
-    ipcRenderer.send('languages:add');
-    dispatch({type: ADD_LANGUAGE, language})
+const addLanguage = language => {
+    console.log(language)
+    ipcRenderer.send('languages:add', language);
+    return dispatch => dispatch({type: ADD_LANGUAGE, language})
 };
 
 export const GET_LANGUAGES = 'GET_LANGUAGES';
@@ -35,5 +37,6 @@ const fetchEntries = () => dispatch => {
 
 export const actions = {
     addEntry,
+    addLanguage,
     fetchEntries
 };
