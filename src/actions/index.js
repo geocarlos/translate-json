@@ -4,7 +4,6 @@ const ipcRenderer = electron.ipcRenderer;
 export const ADD_LANGUAGE = 'ADD_LANGUAGE';
 
 const addLanguage = language => {
-    console.log(language)
     ipcRenderer.send('languages:add', language);
     return dispatch => dispatch({type: ADD_LANGUAGE, language})
 };
@@ -19,12 +18,10 @@ const fetchLanguages = () => dispatch => {
 };
 
 export const ADD_ENTRY = 'ADD_ENTRY';
-
 const addEntry = entry => dispatch => {
     ipcRenderer.send('entries:add');
     // dispatch({type: ADD_ENTRY, entry})
 };
-
 
 export const GET_ENTRIES = 'GET_ENTRIES';
 const getEntries = entries => ({type: GET_ENTRIES, entries});
@@ -35,8 +32,24 @@ const fetchEntries = () => dispatch => {
     // dispatch(getEntries(entries));
 };
 
+export const ADD_TRANSLATION = 'ADD_TRANSLATION';
+const addTranslation = translation => {
+    ipcRenderer.send('translations:add');
+    return dispatch => dispatch({type: ADD_TRANSLATION, translation})
+};
+
+export const GET_TRANSLATIONS = 'GET_TRANSLATIONS';
+const getTranslations = translations => ({type: GET_TRANSLATIONS, translations});
+
+const fetchTranslations = () => dispatch => {
+    ipcRenderer.send('translations:fetch');
+    // const entries = require('../mocks/entries');
+    // dispatch(getEntries(entries));
+};
+
 export const actions = {
     addEntry,
     addLanguage,
+    addTranslation,
     fetchEntries
 };

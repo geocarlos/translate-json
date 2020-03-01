@@ -6,7 +6,7 @@ import { actions } from '../actions';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        margin: '30px',
+        margin: 0,
         '& ul': {
             listStyle: 'none'
         }
@@ -42,9 +42,9 @@ const Languages = () => {
 
     return (
         <div className={classes.root}>
-            <h1>Languages
+            <h2>Languages
                 {!showForm && <Tooltip title="Add language"><IconButton style={{padding: 0}} variant="outlined" color="primary" onClick={() => setShowForm(true)}><AddCircle /></IconButton></Tooltip>}
-            </h1>
+            </h2>
             {showForm && <form onSubmit={handleSubmit} className={classes.form}>
                 <label>Language code: </label>
                 <input type="text" ref={codeRef} />

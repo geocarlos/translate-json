@@ -1,4 +1,4 @@
-import {ADD_ENTRY, ADD_LANGUAGE, GET_ENTRIES, GET_LANGUAGES} from '../actions';
+import {ADD_ENTRY, ADD_LANGUAGE, GET_ENTRIES, GET_LANGUAGES, ADD_TRANSLATION, GET_TRANSLATIONS} from '../actions';
 import { combineReducers } from 'redux';
 
 const languages = (state = [], action) => {
@@ -24,6 +24,18 @@ const entries = (state = [], action) => {
     }
 }
 
+const translations = (state = [], action) => {
+    switch(action.type) {
+        case ADD_TRANSLATION:
+            return state.concat(action.translation);
+        case GET_TRANSLATIONS:
+            return action.translations;
+        default:
+            return state;
+        
+    }
+}
+
 export default combineReducers({
-    languages, entries
+    languages, entries, translations
 });
