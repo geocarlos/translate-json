@@ -3,6 +3,11 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('translation', {
+      id: {
+        type: Sequelize.INTEGER(11),
+        primaryKey: true,
+        autoIncrement: true
+      },
       source: {
         type: Sequelize.STRING(5)
       },

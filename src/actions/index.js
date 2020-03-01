@@ -1,55 +1,88 @@
-const electron = window.require('electron');
-const ipcRenderer = electron.ipcRenderer;
+const { ipcRenderer } = window.require('electron');
 
 export const ADD_LANGUAGE = 'ADD_LANGUAGE';
 
 const addLanguage = language => {
     ipcRenderer.send('languages:add', language);
-    return dispatch => dispatch({type: ADD_LANGUAGE, language})
 };
 
 export const GET_LANGUAGES = 'GET_LANGUAGES';
 const getLanguages = languages => ({type: GET_LANGUAGES, languages});
 
-const fetchLanguages = () => dispatch => {
+const fetchLanguages = () => {
     ipcRenderer.send('languages:fetch');
-    // const entries = require('../mocks/entries');
-    // dispatch(getLanguages(languages));
 };
 
 export const ADD_ENTRY = 'ADD_ENTRY';
-const addEntry = entry => dispatch => {
-    ipcRenderer.send('entries:add');
-    // dispatch({type: ADD_ENTRY, entry})
+const addEntry = entry => {
+    ipcRenderer.send('entries:add', entry);
 };
 
 export const GET_ENTRIES = 'GET_ENTRIES';
 const getEntries = entries => ({type: GET_ENTRIES, entries});
 
-const fetchEntries = () => dispatch => {
+const fetchEntries = () => {
     ipcRenderer.send('entries:fetch');
-    // const entries = require('../mocks/entries');
-    // dispatch(getEntries(entries));
 };
 
 export const ADD_TRANSLATION = 'ADD_TRANSLATION';
 const addTranslation = translation => {
-    ipcRenderer.send('translations:add');
-    return dispatch => dispatch({type: ADD_TRANSLATION, translation})
+    ipcRenderer.send('translations:add', translation);
 };
 
 export const GET_TRANSLATIONS = 'GET_TRANSLATIONS';
 const getTranslations = translations => ({type: GET_TRANSLATIONS, translations});
 
-const fetchTranslations = () => dispatch => {
+const fetchTranslations = () => {
     ipcRenderer.send('translations:fetch');
-    // const entries = require('../mocks/entries');
-    // dispatch(getEntries(entries));
+};
+
+const registerEventListeners = () => dispatch => {
+    ipcRenderer.on('language:added', (event, result) => {
+        dispatch({type: ADD_LANGUAGE, language: result});
+    });
+    ipcRenderer.on('language:addFailed', (event, error) => {
+        console.log(error);
+    });
+    ipcRenderer.on('languages:receive', (event, languages) => {
+        dispatch(getLanguages(languages));
+    });
+    ipcRenderer.on('languages:fetchFailed', (event, error) => {
+        console.log(error);
+    });
+    ipcRenderer.on('entry:added', (event, result) => {
+        dispatch({type: ADD_ENTRY, entry: result});
+    });
+    ipcRenderer.on('entry:addFailed', (event, error) => {
+        console.log(error);
+    });
+    ipcRenderer.on('entries:receive', (event, entries) => {
+        dispatch(getEntries(entries));
+    });
+    ipcRenderer.on('entries:fetchFailed', (event, error) => {
+        console.log(error);
+    });
+    ipcRenderer.on('translation:added', (event, result) => {
+        dispatch({type: ADD_TRANSLATION, translation: result})
+    });
+    ipcRenderer.on('language:addFailed', (event, error) => {
+        console.log(error);
+    });
+    ipcRenderer.on('translations:receive', (event, translations) => {
+        console.log(translations);
+        dispatch(getTranslations(translations));
+    });
+    ipcRenderer.on('translations:fetchFailed', (event, error) => {
+        console.log(error);
+    });
 };
 
 export const actions = {
     addEntry,
     addLanguage,
     addTranslation,
-    fetchEntries
+    fetchEntries,
+    fetchLanguages,
+    fetchTranslations,
+    registerEventListeners
 };

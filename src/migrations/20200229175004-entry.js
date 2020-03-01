@@ -3,9 +3,13 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('entry', {
+      id: {
+        type: Sequelize.INTEGER(11),
+        autoIncrement: true,
+        primaryKey: true
+      },
       key: {
         type: Sequelize.STRING(100),
-        primaryKey: true
       },
       language: {
         type: Sequelize.STRING(5)

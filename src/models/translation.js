@@ -5,6 +5,11 @@ module.exports = (sequelize, DataTypes) => {
   const Entry = sequelize.define(
     'translation',
     {
+      id: {
+        type: DataTypes.INTEGER(11),
+        autoIncrement: true,
+        primaryKey: true
+      },
       source: {
         type: DataTypes.STRING(5)
       },

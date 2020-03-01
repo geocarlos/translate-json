@@ -36,6 +36,16 @@ const translations = (state = [], action) => {
     }
 }
 
+const showRegisterEvents = (state = true, action) => {
+    switch(action.type) {
+        case 'REGISTER_EVENTS':
+            return !state;
+        default:
+            return state;
+        
+    }
+}
+
 export default combineReducers({
-    languages, entries, translations
+    languages, entries, translations, showRegisterEvents
 });

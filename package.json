@@ -41,6 +41,7 @@
     ]
   },
   "devDependencies": {
-    "electron": "^8.0.2"
+    "electron": "^8.0.2",
+    "electron-rebuild": "^1.10.0"
   }
 }

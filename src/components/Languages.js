@@ -35,7 +35,7 @@ const Languages = () => {
         actions.addLanguage({
             code: codeRef.current.value,
             name: nameRef.current.value
-        })(dispatch);
+        });
         codeRef.current.value = '';
         nameRef.current.value = '';
     }
