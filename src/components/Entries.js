@@ -25,16 +25,17 @@ const Entries = ({ languagePair, editEntry, entryPages }) => {
             key: languagePair[key].key,
             source: languagePair[key].content,
             target: languagePair[key].translation,
-            description: languagePair[key].description
+            description: languagePair[key].description,
+            targetId: languagePair[key].targetId
         })
     }
     return (
         <div>
             <div className={classes.root}>
-                <h2>Key</h2>
-                <h2>{languagePair.sourceHeader}</h2>
-                <h2>{languagePair.targetHeader}</h2>
-                <h2>Description</h2>
+                <h3>Key</h3>
+                <h3>{languagePair.sourceHeader}</h3>
+                <h3>{languagePair.targetHeader}</h3>
+                <h3>Description</h3>
             </div>
             {Object.keys(languagePair).map((key, i) => {
                 return key !== 'sourceHeader' && key !== 'targetHeader' && i >= entryPages[0] && i <= entryPages[1] ? (

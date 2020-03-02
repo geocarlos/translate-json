@@ -31,6 +31,8 @@ const Translation = ({ translation }) => {
     const dispatch = useDispatch();
     const [sourceEntries, setSourceEntries] = React.useState([]);
     const [targetEntries, setTargetEntries] = React.useState([]);
+    const [sourceId, setSourceId] = React.useState('');
+    const [targetId, setTargetId] = React.useState('');
     const [key, setKey] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [source, setSource] = React.useState('');
@@ -39,6 +41,7 @@ const Translation = ({ translation }) => {
     const ENTRIES_PER_PAGE = 5;
     const [entryPages, setEntryPages] = React.useState([0, ENTRIES_PER_PAGE - 1]);
     const [currentPage, setCurrentPage] = React.useState(1);
+    const uploadRef = React.useRef();
     const classes = useStyles();
 
     React.useEffect(() => {
@@ -92,6 +95,7 @@ const Translation = ({ translation }) => {
                 targetLanguage[key] = sourceLanguage[key];
             }
             sourceLanguage[key].translation = targetLanguage[key].content;
+            sourceLanguage[key].targetId = targetLanguage[key].id !== sourceLanguage[key].id ? targetLanguage[key].id : '';
             sourceLanguage.sourceHeader = languages[translation.source];
             sourceLanguage.targetHeader = languages[translation.target];
         }
@@ -100,6 +104,9 @@ const Translation = ({ translation }) => {
     }
 
     const editEntry = entry => {
+        setSourceId(entry.id);
+        console.log(entry);
+        setTargetId(entry.targetId);
         setKey(entry.key);
         setSource(entry.source);
         setTarget(entry.target);
@@ -116,20 +123,52 @@ const Translation = ({ translation }) => {
     const handleNavigate = direction => {
         const previous = entryPages[0] + direction;
         const next = entryPages[1] + direction;
+        const upperLimit = Math.ceil(sourceEntries.length / ENTRIES_PER_PAGE) * ENTRIES_PER_PAGE;
 
-        if(previous < 0 || next > sourceEntries.length) return;
+        if(previous < 0 || next > upperLimit) return;
 
         setEntryPages([previous, next]);
         setCurrentPage(currentPage + Math.abs(direction) / direction);
     };
 
+    const handleDocument = () => {
+        uploadRef.current.click();
+    }
+
+    const handleFile = event => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(event.target.files[0]);
+        fileReader.onload = () => {
+            const entries = [];
+            const data = JSON.parse(fileReader.result);
+            for (const entry in data) {
+                entries.push({
+                    key: entry,
+                    language: translation.source,
+                    content: data[entry],
+                    description: ''
+                })
+            }
+            actions.addEntriesFromFile(entries);
+        }
+    }
+
+    const exportJSON = entries => {
+        const contentToExport = {};
+        for (const entry of entries) {
+            contentToExport[entry.key] = entry.content;
+        }
+        actions.getExportedFile(JSON.stringify(contentToExport));
+    }
+
     return (
         <div>
-            <h1>Translation Editor</h1>
+            <h2>Translation Editor</h2>
             <label>Add source language from file </label>
             <Tooltip title="Add source from file">
-                <IconButton onClick={() => console.log('add from docuemnt')}><PostAdd /></IconButton>
+                <IconButton onClick={handleDocument}><PostAdd /></IconButton>
             </Tooltip>
+            <input ref={uploadRef} type="file" hidden onChange={handleFile} />
             <label>| Add new entry </label>
             <Tooltip title="Add source from file">
                 <IconButton onClick={() => setEditing(true)}><Add/></IconButton>
@@ -146,12 +185,16 @@ const Translation = ({ translation }) => {
                 <input type="text" value={target} onChange={e => setTarget(e.target.value)} />
                 <label>Description: </label>
                 <input style={{ gridColumn: '2/5' }} type="text" value={description} onChange={e => setDescription(e.target.value)} />
+                <input type="text" readOnly value={sourceId}/>
+                <input type="text" readOnly value={targetId}/>
                 <Button disabled={!(key && source && target)} style={{ gridColumn: '1/2' }} variant="contained" size="small" color="primary" type="submit">Add</Button>
                 <Button variant="outlined" color="secondary" onClick={handleDismiss}>Dismiss</Button>
             </form>}
             <div className={classes.entries}>
                 <Entries languagePair={prepareTranslationSet()} editEntry={editEntry} entryPages={entryPages} />
             </div>
+            <Button onClick={() => exportJSON(sourceEntries)}>Export Source to JSON</Button>
+            <Button onClick={() => exportJSON(targetEntries)}>Export Target to JSON</Button>
         </div>
     );
 }

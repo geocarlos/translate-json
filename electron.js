@@ -1,9 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-require('sqlite3');
 const language = require('./src/functions/language');
 const entry = require('./src/functions/entry');
 const translation = require('./src/functions/translation');
-const path = require('path');
 
 let mainWindow;
 
@@ -16,6 +14,8 @@ app.on('ready', () => {
             backgroundThrottling: false
         }
     });
+
+
 
     mainWindow.loadURL('http://localhost:3000');
     // mainWindow.loadURL(`file://${__dirname}/build/index.html`);
@@ -45,6 +45,18 @@ ipcMain.on('entries:add', async (event, data) => {
         const result = await entry.addEntry(data.key, data.language, data.content, data.description);
         mainWindow.webContents.send('entry:added', result.dataValues);
     } catch (eror) {
+        mainWindow.webContents.send('entry:addFailed', error);
+    }
+});
+
+ipcMain.on('entriesFromFile:add', async (event, entries) => {
+    console.log(entries);
+    try {
+        for(const data of entries) {
+            const result = await entry.addEntry(data.key, data.language, data.content, data.description);
+            mainWindow.webContents.send('entry:added', result.dataValues);
+        }
+    } catch (error) {
         mainWindow.webContents.send('entry:addFailed', error);
     }
 });
